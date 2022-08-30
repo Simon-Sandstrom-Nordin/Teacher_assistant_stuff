@@ -1,0 +1,9 @@
+Mål: bli bekväm med numeriska metoder för ekvationslösning (ex. Newtons),
+interpolation (ex. linjär interpolation), parameteranpassning (ex. anpassa
+ett polynom på formen c*x + d {linjärt polynom}) till given data, och
+tillförlitlighet (ex. numerisk tillförlitlighetsbedömning, var går
+felgränserna?).
+
+inför redovisning: ska kunna redogöra teori, algoritmer, & resultat.
+
+Lycka till!

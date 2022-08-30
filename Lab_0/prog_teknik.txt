@@ -1,0 +1,36 @@
+Fundera över flödet i koden innan ni börjar programmera.
+- tänk som i factorio: hela fabriken blir spagetti annars.
+
+Ge indata bara på ett ställe i er kod.
+- tänk som i factorio: ni vill ha en "main bus" så att allt blir hanterbart
+
+Använd variabler
+- tänk som i factorio: ett bälte ska föras till många platser.
+
+Återanvänd kod
+- tänk som i factorio: blueprints är din vän, speciellt om de är dina egna.
+
+Gör inte koden onödigt generell
+- tänk som i factorio: ... nej jag fattar inte den här. Ska inte koden vara
+  så generell som möjligt? Eller ...? tänk kanske som i factorio, du vill
+  att delarna ska vara så urskiljbara som möjligt.
+
+Gör inte koden onödigt komplicerad
+- tänk som i factorio: du vill ha en så översiktlig fabrik som möjligt.
+
+Kommentera koden när ni skriver ner den
+- tänk som i factorio: du vill lämna markers här och var för att ha koll på
+  allt.
+
+Hemligt trick med anonyma funktioner:
+- de kan användas för att anropa en vanlig funktion med vissa parametrar
+  låsta. ex:
+
+m = @(x) trick(x, 5);
+disp(m(3))
+
+function value = trick(x,y)
+value = x + 2*y;
+end
+
+prova!

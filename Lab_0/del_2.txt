@@ -1,0 +1,23 @@
+Del 2: Matlab-program och grafik.
+
+Har ej tillgång till filerna, men kan säga detta:
+
+8.
+'r' och 'y' är båda "options" till funktionerna som plottar/fyller i, 
+eller vad för grafikfunktioner du nu vill använda. 'r':red, 'y':yellow.
+
+9.
+Jag gissar att du ökar antalet punkter på randen till cirkeln för att släta
+ut den. Försök hitta "n", antal hörn.
+
+10.
+clf, "clear current figure" är ny för mig. Brukar skriva clear all, trots
+att MATLAB klagar på att det är overkill.
+clear rensar MATLABs variabelminne (workspace?)
+"who" skriver ut alla variabler in use.
+
+11.
+Ja, jag har ju inte filerna, men det ser ut som att plottarna antingen
+kommer överlappa eller så kommer den ena plotten stängas innan den andra
+visas. Hennes poäng: ha inte "clear all" eller "clf" i filer du anropar, du
+kan råka ta bort variabler eller plottar som ju kan va bra att ha.

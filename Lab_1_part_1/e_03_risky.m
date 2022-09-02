@@ -15,8 +15,7 @@ f = @(x) 62.*x - ((x.^2 + x + 0.04) ./ (2.*x + 1)).^7 - 19.*x.*exp(-x);
 % punkten vid "./".
 
 % den här kommer behövas senare: ... kanske.
-fp = @(x) 14 .* (x.^2 + x + .04).^7 ./ (2.*x + 1).^8 - ...
-    7 .* (x.^2 + x + .04).^6 ./ (2.*x + 1).^6 + 19.*exp(-x).*(x -1) + 62;
+fp = @(x) @(x, x_old) (f(x) - f(x_old)) / (x - x_old);  % secant impostor
 
 %fp = @(x) 62 - 7.*((x.^2 + x + .04) ./ (2.*x + 1)) ...
 %    .*((2*x.^2 + 2*x + .92)./(4*x.^2 + 4.*x + 1)) ...
@@ -39,7 +38,7 @@ f([0 1 4]')
 x = linspace(-2, 10);
 plot(x, f(x)); ylim([-150, 150]); title("both roots");
 
-figure(12)
+figure(2)
 plot(linspace(0,.0000001, 100), f(linspace(0,.0000001, 100)));
 title("lowest root");
 
@@ -88,7 +87,7 @@ disp(true_error_list_1')
 
 % Finding contant of convergence
 M_1_list = []; order = 2;
-for k = 1: length(true_error_list_1) - 1 - 2    % minus två för lärdomen.
+for k = 1: length(true_error_list_1) - 1 - 1    % minus ett för lärdomen.
     M_1 = true_error_list_1(k+1) / (true_error_list_1(k).^order);
     M_1_list(end + 1) = M_1;
 end
@@ -106,7 +105,7 @@ while (iter < max_iter) && (error > tol)
     end
     x0 = x1; list_2(end+1) = x1;
     iter = iter + 1;
-    true_error = abs(x1 - high_root);
+        true_error = abs(x1 - high_root);
     true_error_list_2(end + 1) = true_error;
 end
 disp("high root is: " + x1);
@@ -118,8 +117,8 @@ disp(true_error_list_2')
 
 % Finding contant of convergence
 M_2_list = []; order = 2;
-for k = 1: length(true_error_list_2) - 1 - 2    % minus två för lärdomen.
-    M_2 = true_error_list_2(k+1) / (true_error_list_2(k).^order);
+for k = 1: length(true_error_list_1) - 1 - 1    % minus ett för lärdomen.
+    M_2 = true_error_list_1(k+1) / (true_error_list_1(k).^order);
     M_2_list(end + 1) = M_2;
 end
 disp("Constants of convergence for high root: ");disp(M_2_list');

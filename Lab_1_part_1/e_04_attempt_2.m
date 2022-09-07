@@ -63,7 +63,7 @@ for k = 1:13
     end
     L_p = @(x) L_p(x) + time(k) .* coefficient(x) ./ denom(k);
 end
-L_p(months) == time % interpolationspolynomet överlappar med alla punkter!.
+% L_p(months)==time;%interpolationspolynomet överlappar med alla punkter!.
 X = linspace(1,13);
 hold on;
 plot(X, L_p(X), 'r-')   % Så vackert .... fast Runges fenomen uppkommer i
@@ -125,11 +125,9 @@ for point = 1:length(time) - 1  % until the end of time ...
 end
 hold on;
 plot(x_vector, y_vector, 'b-');
-legend("Data points", "Lagrange polynomial interpolation", ...
-    "Piece-wise linear interpolation");
 
-x_vector;
-y_vector;
+x_vector;   % for Lagrange
+y_vector;   % for Lagrange
 % Random notes on cell arrays in general since I'm using them to store
 % function handles: if c = {@(x) x @(x x.^2}, then c(1) accesses the first
 % element (which is a cell array) {@(x)x} and c{1} accesses the *element*
@@ -138,7 +136,109 @@ y_vector;
 % C. Splines approximation through every point. Cubic splines? Probably.
 % Interesting note: "Linear Spline" is like piece-wise linear
 %                   interpolation. Technically a Splines approximation.
+% Notes: If a polynomial approximation has matching zeroths, first, and
+% second derivatives at the satisfied data points, then the approximation
+% is a cubic spline. "A cubic spline S(x) is a set of cubic polnomials" <-.
+% There are three coefficients to be calculated for each S(X) = ax^2+bx+c.
+% Terminology: "natural" cublic splines have inflection points at the ends.
+% s1_pp(x1) = 0 and Sn_minus_1(xn) = 0. End conditions are conditions such
+% as these. With these end-conditions, we have gone from having to solve
+% 3n - 5 linears in 3n - 3 unknowns, to having m = 3n - 3 equations and
+% unknowns.
+
+%What's a diagonally dominant coefficient matrix? Mostly diagonally sparse?
+
+% Looking at the code in Sauer page 172 for inspiration:
+% define the deltas n' shit
+n = length(months);
+v1 = 0; vn = 0; % are these the natural spline conditions?
+A = zeros(n,n); % n times n coefficient matrix (not like c-array, but... M)
+r = zeros(n,1); % the resulting vector... leading and trailing zeros reman.
+dx = []; dy = [];
+for k = 1: n - 1
+    dx(k) = months(k+1) - months(k); dy(k) = time(k+1) - time(k);
+end
+% load the matrix
+for k = 2:n-1   % they call this "Load the A matrix". Think factorio carts!
+    A(k, k-1:k+1) = [dx(k-1), 2*(dx(k-1) + dx(k)), dx(k)];  % k:th row,
+                                            % the three columns indicated.
+    % load the resulting vector while you're at it.
+    r(k) = 3*(dy(k)/dx(k) - dy(k-1)/dx(k-1));
+end
+% natural spline conditions
+A(1,1) = 1; A(n,n) = 1;
+
+coeff = zeros(n,3);
+coeff(:,2) = A\r;
+for k = 1:n-1   % I wondered why they had three columns: the d's and be b's
+    coeff(k,3) = (coeff(k+1, 2) - coeff(k,2)) / (3*dx(k));  % d's
+    coeff(k,1) = dy(k) / dx(k) - dx(k) * (2*coeff(k, 2) + coeff(k+1, 2))/3;
+    % they use the d's to find the b's. Ignore that completely please.
+end
+coeff = coeff(1:n-1, 1:3);  % for some reason, they strip the very last line.
+x = months; y = time; k = 100; n = length(x); x1 = []; y1 = [];
+% k is number of plotted points.
+for i = 1:n-1
+    xs= linspace(x(i), x(i+1), k + 1);
+    dx = xs - x(i);
+    ys = coeff(i,3)*dx; % Sauer: evaluate using nested multipl.
+    ys = (ys + coeff(i,2)) .* dx;   
+    ys = (ys + coeff(i, 1)) .* dx+y(i);
+    x1 = [x1; xs(1:k)']; y1 = [y1;ys(1:k)'];
+end
+hold on;
+x1 = [x1; x(end)]; y1 = [y1; y(end)]; plot(x1, y1, 'm-')
+
+% Ok, so note: I kind of understand how the coefficients are calculated.
+% I have not taken the time to meditate over the fact that this for loop
+% containing nested multiplication actually produces my intepolating valus.
+
+% D. Ett andragradspolynom endast med data från 1 juni till 1 agusti.
+% Detta motsvarar x(6), x(7), x(8).
+
+X =  x(6:8)'; Y = y(6:8)'; A = [X(1)^2,X(1),1;X(2)^2,X(2),1;X(3)^2,X(3),1];
+c = A \ Y;
+hold on;
+T = linspace(x(1), x(end));
+plot(T, c(1)*T.^2 + c(2)*T + c(3), 'g-')
 
 % There's a complicated MATLAB code provided on p.172 of Sauer's book
 % for calculating the spline coefficients. I should go now, but maybe do
 % some of the 3.4 excercises to get a feel for spline conditions and stuff.
+
+% E. Same as in D but now with a least squares approximation from April to
+% September. x(4:9)
+
+X = x(4:9)'; Y = y(4:9)'; squared_terms = X.^2; linear_terms = X;
+constant_terms = ones(length(X), 1);
+A = [squared_terms linear_terms constant_terms];
+c = A \ Y;
+hold on;
+plot(T, c(1)*T.^2 + c(2)*T + c(3), 'y-')
+
+% F. Same as D and E but now with all data points.
+
+X = x'; Y = y'; squared_terms = X.^2; linear_terms = X;
+constant_terms = ones(length(X), 1);
+A = [squared_terms linear_terms constant_terms];
+c = A \ Y;
+hold on;
+plot(T, c(1)*T.^2 + c(2)*T + c(3), 'k-')
+
+% G. c1 + c2*cos(w*x) + c3*sin(w*x), w = 2*pi / 365, through all points.
+omega = 2*pi / 365;
+sinus_terms = sin(X.*omega); cosine_terms = cos(X.*omega);
+constant_terms = ones(length(X), 1);
+A = [sinus_terms cosine_terms constant_terms];
+c = A \ Y;
+hold on;
+plot(T, c(3) + c(2)*cos(T.*omega) + c(1)*sin(T.*omega), 'r-')
+
+
+
+legend("Data points", "Lagrange polynomial interpolation", ...
+    "Piece-wise linear interpolation", "Natual cubic spline", ...
+    "Second degree polynomial through June to August", ...
+    "Second degree least square polynomial from April to September", ...
+    "Second degree least squares polnomial using all points", ...
+    "Trigonometric least squares, c1 + c2*cos(w*x) + c3*sin(w*x), using all points");

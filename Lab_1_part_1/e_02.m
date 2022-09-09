@@ -37,7 +37,7 @@ f([0 1 4]')
 %f(2)
 
 x = linspace(-2, 10);
-plot(x, f(x)); ylim([-150, 150]); title("both roots");
+plot(x, f(x), 'o'); ylim([-150, 150]); title("both roots");
 
 figure(12)
 plot(linspace(0,.0000001, 100), f(linspace(0,.0000001, 100)));

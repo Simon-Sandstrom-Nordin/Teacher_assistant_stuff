@@ -47,7 +47,7 @@ disp("True error list one is: ")
 disp(true_error_list_1')
 
 % Finding contant of convergence
-M_1_list = []; order = 2;
+M_1_list = []; order = (1 + sqrt(5))/2;
 for k = 1: length(true_error_list_1) - 1 - 1    % minus ett för lärdomen.
     M_1 = true_error_list_1(k+1) / (true_error_list_1(k).^order);
     M_1_list(end + 1) = M_1;
@@ -75,7 +75,7 @@ disp("True error list two is: ")
 disp(true_error_list_2')
 
 % Finding contant of convergence
-M_2_list = []; order = 2;
+M_2_list = []; order = (1 + sqrt(5))/2;
 for k = 1: length(true_error_list_1) - 1 - 1    % minus ett för lärdomen.
     M_2 = true_error_list_1(k+1) / (true_error_list_1(k).^order);
     M_2_list(end + 1) = M_2;

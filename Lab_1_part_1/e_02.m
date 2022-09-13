@@ -4,7 +4,8 @@ clc; clear all; close all; format long;
 % For finding the constants of convergence, we've seen that the relative
 % errors are not that good for this. We'll need the true error, and for
 % that we're looking to the future and procure the real roots:
-low_root = 0.000000000003810;  high_root = 3.928727810646067;
+low_root = 3.810232560470491e-12;   % low_root = 0.000000000003810;  
+high_root = 3.928727810646067;
 
 
 % bestäm rötter till

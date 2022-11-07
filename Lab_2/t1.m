@@ -6,22 +6,22 @@ L = 2.4;
 up = @(t, u) [u(2);
     -(9.81/L)*sin(u(1))];
 
-u1_0 = .9;
-u2_0 = 3 * pi / 7;
+u1_0 = 3 * pi / 7;
+u2_0 = .9;
 
 u = [u1_0; u2_0];   % Initial vector
 
 T = pi+1;
-t = linspace(0, T);
+t = linspace(0, 2*T, 2^(5)*100);
 
 [t_v, U] = ode45(up, t, u)
 figure(2)
-plot(t_v, U(:,2));
+plot(t_v, U(:,1));
 hold on
-plot(t_v, U(:, 1));
+plot(t_v, U(:, 2));
 legend("Angle", "Angular speed")
 
-phi = U(:,2) - U(1,2)
+phi = U(:,1) - u1_0
 
 %phi = phi - phi(1)
 %for k = 1:len(phi)
@@ -35,14 +35,21 @@ for j = 1:2
     end
     i = i + 1;
 end
-i = i-1; % compensation
-point_before = i;
+i = i - 1; % compensation
+point_before = i; 
 point_after = i + 1;
 disp(t_v(point_before) + " " + phi(point_before))
 disp(t_v(point_after) + " " + phi(point_after))
 
 
 plot(t, phi)
+
+% 3.574001745292441
+% 3.571221418213708
+% 3.572479591661291
+% 3.571179253579453
+% 3.571563498546521
+% 3.571423491883711
 
 gradient = (phi(point_after) - phi(point_before)) / (t_v(point_after) - t_v(point_before));
 y0 = phi(point_before); t0 = t_v(point_before);
@@ -79,7 +86,7 @@ hold on
 %plot(test_t, spline(t_v, phi))
 
 %figure(3)
-%anim(t_v, U(:,2), L)
+%anim(t_v, U(:,1), L)
 % Taken from laboration instructions
 function anim(tut,fiut,L)
 for i=1:length(tut)-1

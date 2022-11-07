@@ -11,7 +11,7 @@ T0 = 315;
 u0 = [T0, guess];
 [t, U] = ode45(up, [0,3.6], u0);
 figure(2)
-plot(t, U(:,1), 'o')
+plot(t, U(:,1))
 disp(t + " " + U(:,1))
 
 index = 1;

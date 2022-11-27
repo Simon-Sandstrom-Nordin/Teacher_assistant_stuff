@@ -21,7 +21,7 @@ hold on
 plot(t_v, U(:, 2));
 legend("Angle", "Angular speed")
 
-phi = U(:,1) - u1_0
++
 
 %phi = phi - phi(1)
 %for k = 1:len(phi)

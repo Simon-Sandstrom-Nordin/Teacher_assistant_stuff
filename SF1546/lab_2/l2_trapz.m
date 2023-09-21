@@ -1,8 +1,7 @@
-function approx_int = e_07_trapz(y_list, h)
+function approx_int = l2_trapz(y_list, h)
 approx_int = 0; % place-holder value
 
 % add endpoints
-% y_list; remains since testing
 approx_int = approx_int + (h/2)*(y_list(1) + y_list(end));
 
 % add intermediary points

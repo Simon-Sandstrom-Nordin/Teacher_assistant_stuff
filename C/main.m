@@ -85,7 +85,7 @@ for iter = 1:max_iter
     % task a
     while y_vec(end) > 0
         % Explicit euler
-        [new_x,new_xp,new_y,new_yp,new_v] = System_euler_B(x,xp,y,yp,v,h);
+        [new_x,new_xp,new_y,new_yp,new_v] = System_RK4_B(x,xp,y,yp,v,h);
     
         % update variables
         x = new_x;

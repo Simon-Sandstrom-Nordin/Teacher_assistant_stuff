@@ -42,3 +42,26 @@ figure(1)
 x1 = linspace(0,1); x2 = linspace(0,1);
 [xx1, xx2] = meshgrid(x1, x2);
 mesh(xx1, xx2, real(v1_approx_f(xx1,xx2)))
+
+% garbage
+
+    
+    %if counter == 2
+        %disp("...")
+        %u
+        %disp("hh")
+        %t = 0:delta_t*4:t_end;
+        %x = 0:delta_x*2:x_end;
+     %   u_new = zeros(length(t), length(x));
+      %  for row = 1:length(t)
+       %     for column = 1:length(x)-1
+        %        u_new(row, column) = u(4*row-3, 2*column-1);
+        %    end
+       % end
+        %u_new
+        %mesh(u_new);
+         %       mesh(u);
+   %     title("Fourier series approximation, N = " + num2str(N))
+    %    xlabel("x")
+     %   ylabel("Time [s]")
+    %else

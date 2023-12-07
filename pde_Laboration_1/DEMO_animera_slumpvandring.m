@@ -7,7 +7,7 @@ clc;
 % Här är ett exempel på hur animera_slumpvandring_geo funkar.
 % Först måste vi definiera några parametrar:
 
-K = 2000; % Antal partiklar
+K = 200; % Antal partiklar
 c = 0.02; % c - diffusionsparameter
 N = 100; % Antal tidssteg
 M = 40; % Antal punkter i rutnätet längsmed x- och y-axlarna

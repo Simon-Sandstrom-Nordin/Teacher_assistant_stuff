@@ -1,0 +1,5 @@
+A = tf([1], [1 5 1])
+figure(1)
+step(A)
+figure(2)
+rlocus(A)

@@ -1,32 +1,11 @@
-%SIMPLEX Crude simplex code for solving an LP problem given an
-%        initial feasible basis beta.
-%        [x,z,y,r,beta,iter] = simplex(A,b,c,beta)
-%        solves the problem 
-%                        minimize     c'x
-%                        subject to   A x = b
-%                                     x >= 0
-%        
-%        On successful termination, x contains the optimal solution, and
-%        z contains the final objective function value. Y contains
-%        an optimal dual solution and r contains the dual slacks. On entry,
-%        beta is a row vector containing the indices of the basis, which
-%        is assumed to be primal feasible. On exit, beta contains the indices
-%        of the final basis and iter denotes the number of iterations. 
-%
-%        Notation selected to fit with the KTH course SF1811 Optimization.
-
-%        Crude version, written by Anders Forsgren for use in SF1811 Optimization
-
 function [x,z,y,r,beta,iter] = simplex(A,b,c,beta)
 
 [m,n] = size(A);
-
 iter = 0;
 rnymin = -1;
 fuzz = sqrt(eps);
 
-fprintf( '\n  Iter           zbar    betap      nyq           tmax \n' ) 
-        
+r = zeros(n, 1);        
 ny = [1:n];
 ny(beta) = [];
 
@@ -36,7 +15,21 @@ bbar = Abeta\b;
 x(beta,1) = bbar;
 x(ny,1) = zeros(length(ny),1);
 
+% Display initial x, y, and r
+y = (Abeta')\c(beta);
+r(ny,1) = c(ny) - A(:,ny)'*y;
+disp('Initial Values:');
+disp('---------------');
+fprintf('Initial x:\n');
+disp(x');
+fprintf('Initial y:\n');
+disp(y');
+fprintf('Initial r:\n');
+disp(r');
+
 while rnymin < -fuzz
+  fprintf('\nIter: %d\n', iter);
+  fprintf('----------------------\n');
 
   Abeta = A(:,beta);
   Any = A(:,ny);
@@ -51,12 +44,11 @@ while rnymin < -fuzz
   
   if min(bbar) < -fuzz
     keyboard
-    fprintf('\n Error, basis is not primal feasible \n\n')
+    fprintf('\nError, basis is not primal feasible\n\n')
     break;
   end
-    
-% Dantzig rule
 
+  % Dantzig rule
   [rnymin,q] = min(rny);
 
   if rnymin < -fuzz
@@ -67,7 +59,7 @@ while rnymin < -fuzz
       [tmax,ppos]= min(bbar(Abarkpos)./Abark(Abarkpos));
       p = Abarkpos(ppos);
     else
-      fprintf('\n Problem has unbounded solution \n\n')
+      fprintf('\nProblem has unbounded solution\n\n')
       break;
     end
     
@@ -79,26 +71,39 @@ while rnymin < -fuzz
     beta(p) = nyq;
     ny(q) = betap;
 
-    str1 = sprintf( ' %5g   %12.5e', iter, zbar );
-    str2 = sprintf( ' %8g   %6g   %12.2e', betap, nyq, tmax );        
-    disp([str1 str2])
-  
+    x(beta,1) = bbar;
+    x(ny,1) = zeros(length(ny),1);
+    r(beta,1) = zeros(length(beta),1);
+    r(ny,1) = rny;
+
+    fprintf('z: %f\n', zbar);
+    fprintf('x:\n');
+    disp(x');
+    fprintf('y:\n');
+    disp(y');
+    fprintf('r:\n');
+    disp(r');
+
     iter = iter + 1;
     
   else
-    str1 = sprintf( ' %5g   %12.5e', iter, zbar );
-    str2 = sprintf( '\n' );        
-    disp([str1 str2])
-  
-    fprintf( '  Optimal solution found \n\n' ) 
-  end
+    fprintf('Optimal solution found\n\n');
+    x(beta,1) = bbar;
+    x(ny,1) = zeros(length(ny),1);
+    r(beta,1) = zeros(length(beta),1);
+    r(ny,1) = rny;
 
+    fprintf('Final z: %f\n', zbar);
+    fprintf('Final x:\n');
+    disp(x');
+    fprintf('Final y:\n');
+    disp(y');
+    fprintf('Final r:\n');
+    disp(r');
+    break;
+  end
 end
 
-x(beta,1) = bbar;
-x(ny,1) = zeros(length(ny),1);
-
-r(beta,1) = zeros(length(beta),1);
-r(ny,1) = rny;
-
 z = zbar;
+
+end
